@@ -1,0 +1,36 @@
+{
+  "name": "redis-pubsub",
+  "version": "0.0.1",
+  "description": "Wrapper for easy communication between processes via Redis Pub\\Sub.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TeslaCtroitel/node-redis-pubsub.git"
+  },
+  "keywords": [
+    "redis",
+    "pubsub"
+  ],
+  "author": "EnRoute",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TeslaCtroitel/node-redis-pubsub/issues"
+  },
+  "homepage": "https://github.com/TeslaCtroitel/node-redis-pubsub#readme",
+  "devDependencies": {
+    "eslint": "^3.16.1",
+    "eslint-config-google": "^0.7.1",
+    "ioredis": "^2.5.0",
+    "mocha": "^3.2.0"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "debug": "^2.6.2"
+  },
+  "engines": {
+    "node": "^6.10.0"
+  }
+}
