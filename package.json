@@ -2,7 +2,7 @@
   "name": "redis-pubsub",
   "version": "0.0.1",
   "description": "Wrapper for easy communication between processes via Redis Pub\\Sub.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -23,7 +23,6 @@
   "devDependencies": {
     "eslint": "^3.16.1",
     "eslint-config-google": "^0.7.1",
-    "ioredis": "^2.5.0",
     "mocha": "^3.2.0"
   },
   "dependencies": {
