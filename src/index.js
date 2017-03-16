@@ -104,8 +104,9 @@ class PubSub{
       this._channels.get(channel).push(listener);
     }else{
       this._channels.set(channel, [ listener ]);
+      this._redisSub.subscribe(channel);
     }
-    this._redisSub.subscribe(channel);
+
     return listener;
   }
 
@@ -137,6 +138,7 @@ class PubSub{
 
     if(channel.length === 1){
       this._channels.delete(listener.channel);
+      this._redisSub.unsubscribe(listener.channel);
     }
 
     for(let i = 0; i < channel.length; i++){
