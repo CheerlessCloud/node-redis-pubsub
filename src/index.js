@@ -79,7 +79,7 @@ class PubSub{
    * @type {number}
    */
   get count(){
-    return this._channels.count();
+    return this._channels.count;
   }
 
   /**
