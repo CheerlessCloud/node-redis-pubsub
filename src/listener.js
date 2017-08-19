@@ -16,7 +16,7 @@ class Listener {
   /**
    * @class Listener
    * @param {string} channel - Listener channel.
-   * @param {function(Error, Object)} callback - Callback for sended message.
+   * @param {function(Error, any, Listener)} callback - Callback for sended message.
    * @param {Object} options - Options.
    * @param {function(Listener)} options.stop - Stop listening method.
    * @param {boolean=} [options.once=false] - Invoke only once try.
@@ -61,9 +61,9 @@ class Listener {
    */
   execute(message) {
     try {
-      this[callbackS](null, JSON.parse(message.toString()));
+      this[callbackS](null, JSON.parse(message.toString(), this));
     } catch (err) {
-      this[callbackS](err);
+      this[callbackS](err, null, this);
     } finally {
       if (this.options.once) {
         this.stop();
