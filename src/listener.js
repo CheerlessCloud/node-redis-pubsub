@@ -1,76 +1,75 @@
-/**
- * @module listener
- */
-
 let maxId = 0;
 /**
- * @method getNextId
- * @return {number}
+ * @function getNextId
+ * @returns {number} - Next ID.
  */
-function getNextId(){
-  return(maxId += 1);
-}
+// eslint-disable-next-line no-return-assign
+const getNextId = () => ((maxId < 2147483648) ? (maxId += 1) : (maxId = 0));
 
+const idS = Symbol('id');
+const channelS = Symbol('channel');
+const callbackS = Symbol('callback');
 /**
  * @class Listener
  */
-module.exports = class Listener{
-	/**
-	 * @constructor Listener
-	 * @param {string} channel - listener channel
-	 * @param {function} callback - callback for sending message
-	 * @param {object} options
-	 * @param {function} options.stop
-	 * @param {boolean=} [options.once=false]
-	 */
-	constructor(channel, callback, options){
-		this._id = getNextId();
-		this._channel = channel;
-    this._options = options;
+class Listener {
+  /**
+   * @class Listener
+   * @param {string} channel - Listener channel.
+   * @param {function(Error, Object)} callback - Callback for sended message.
+   * @param {Object} options - Options.
+   * @param {function(Listener)} options.stop - Stop listening method.
+   * @param {boolean=} [options.once=false] - Invoke only once try.
+   */
+  constructor(channel, callback, options) {
+    this[idS] = getNextId();
+    this[channelS] = channel;
+    this.options = options;
 
-		if(!callback || typeof callback !== 'function'){
-			throw new TypeError('Callback must be a function.');
-		}
-		this._callback = callback;
+    if (typeof callback !== 'function') {
+      throw new TypeError('Callback must be a function.');
+    }
+
+    this[callbackS] = callback;
 
     /**
-  	 * @method stop
-  	 * @description Stop and remove this listener
-     * @return {undefined}
-  	 */
+     * @function stop
+     * @description Stop and remove this listener
+     */
     this.stop = () => options.stop(this);
-	}
-
-	/**
-	 * Listener Id
-	 * @type {number}
-	 */
-	get id(){
-		return this._id;
-	}
-
-	/**
-	 * Listener channel
-	 * @type {string}
-	 */
-	get channel(){
-		return this._channel;
-	}
+  }
 
   /**
-   * @method execute
-   * @param {(string|Buffer)} message
-   * @return {undefined}
+   * @readonly
+   * @type {number}
    */
-  execute(message){
-    try{
-      this._callback(null, JSON.parse(message.toString()));
-    }catch(err){
-      this._callback(err);
-    }finally{
-      if(this._options.once){
+  get id() {
+    return this[idS];
+  }
+
+  /**
+   * @readonly
+   * @type {number}
+   */
+  get channel() {
+    return this[channelS];
+  }
+
+  /**
+   * @function execute
+   * @param {(string|Buffer)} message - Recieved message.
+   */
+  execute(message) {
+    try {
+      this[callbackS](null, JSON.parse(message.toString()));
+    } catch (err) {
+      this[callbackS](err);
+    } finally {
+      if (this.options.once) {
         this.stop();
       }
     }
   }
-};
+}
+
+module.exports = Listener;

@@ -1,6 +1,6 @@
 const Listener = require('./listener');
 const Promise = require('bluebird');
-const loggerErr = require('debug')('redisPubSub:error');
+const Redis = require('ioredis');
 
 /**
  * @typedef {object} RedisConnection
@@ -9,153 +9,147 @@ const loggerErr = require('debug')('redisPubSub:error');
  * @method on
  */
 
+const channels = Symbol('channels');
+const connectionFabric = Symbol('connectionFabric');
+const redisSub = Symbol('redisSub');
+const redisPub = Symbol('redisPub');
+
 /**
  * @class PubSub
  */
-class PubSub{
+class PubSub {
   /**
-   * @constructor ChannelsMap
-   * @param {object} options
-   * @param {function.<RedisConnection>=} options.createConnection
-   * @param {string=} options.dsn
-   * @param {string=} options.socket
-   * @param {string=} [options.host='127.0.0.1']
-   * @param {number=} [options.port=6379]
-   * @param {string=} options.password
-   * @param {number=} [options.db=0]
-   * @param {string=} [options.redisModuleName='ioredis']
+   * @class PubSub
+   * @param {Object} options - Options.
+   * @param {function.<RedisConnection>=} options.connectionFabric
+   * - Function to instantiate custom redis client.
+   * @param {string=} options.dsn - DSN string  of Redis server.
+   * @param {string=} options.socket - Socket address  of Redis server.
+   * @param {string=} [options.host='127.0.0.1'] - Host of Redis server.
+   * @param {number=} [options.port=6379] - Port of Redis server.
+   * @param {string=} options.password - Password  of Redis server.
+   * @param {number=} [options.db=0] - Database index.
+   * @param {function(err)} [options.logger] 
+   * - Logger callback (this invoke with errors from ioredis client).
    */
-  constructor(options){
-    this._channels = new Map();
+  constructor(options) {
+    this[channels] = new Map();
 
-    if(options.createConnection){
-      if(typeof options.createConnection !== 'function'){
-        throw new Error('createConnection parameter must be function.');
+    if (options.connectionFabric) {
+      if (typeof options.connectionFabric !== 'function') {
+        throw new TypeError('options.connectionFabric must be function.');
       }
 
-      this._createConnection = options.createConnection;
-    }else{
-      const Redis = require(options.redisModuleName || 'ioredis');
-
-      this._createConnection = function(){
+      this[connectionFabric] = options.connectionFabric;
+    } else {
+      this[connectionFabric] = () => {
         let connection;
-        if(options.dsn){
+        if (options.dsn) {
           connection = new Redis(options.dsn);
-        }else if(options.socket){
+        } else if (options.socket) {
           connection = new Redis(options.socket);
-        }else{
-          connection = new Redis({
-            host     : options.host || '127.0.0.1',
-            port     : options.port || 6379,
-            password : options.password,
-            db       : options.db || 0,
-          });
+        } else {
+          connection = new Redis(options);
         }
 
-        connection.on('error', loggerErr);
+        connection.on('error', options.logger);
 
         return connection;
       };
     }
 
-    this._redisSub = this._createConnection();
-    this._redisPub = this._createConnection();
+    this[redisSub] = this[connectionFabric]();
+    this[redisPub] = this[connectionFabric]();
 
-    this._redisSub.on('message', (channel, message) => {
-      const listeners = this._channels.get(channel);
+    this[redisSub].on('message', (channel, message) => {
+      const listeners = this[channels].get(channel);
 
-      if(!listeners || listeners.length === 0){
+      if (!listeners || listeners.length === 0) {
         return;
       }
 
-      for(const listener of listeners){
+      for (const listener of listeners) {
         listener.execute(message);
       }
     });
   }
 
   /**
-   * Count of channels
+   * @description Count of channels
    * @type {number}
    */
-  get count(){
-    return this._channels.count;
+  get count() {
+    return this[channels].count;
   }
 
   /**
-   * @method listen
-   * @param {string} channel - target channel
-   * @param {function.<Error, (object|Buffer)>} callback
-   * @param {object=} options
-   * @param {boolean=} options.once
-   * @return {Listener}
+   * @function listen
+   * @param {string} channel - Target channel.
+   * @param {function(Error, (object|Buffer), Listener)} callback - Callback.
+   * @param {object=} options - Options for listener.
+   * @param {boolean=} options.once - Invoke listener once a time and destroy.
+   * @returns {Listener} - Return Listener object.
    */
-  listen(channel, callback, options){
+  listen(channel, callback, options) {
     const listener = new Listener(
       channel,
       callback,
-      Object.assign(
-        {},
-        options,
-        {stop : this.stop.bind(this)}
-      ));
+      Object.assign({}, options, { stop: this.stop.bind(this) }));
 
-    if(this._channels.has(channel)){
-      this._channels.get(channel).push(listener);
-    }else{
-      this._channels.set(channel, [ listener ]);
-      this._redisSub.subscribe(channel);
+    if (this[channels].has(channel)) {
+      this[channels].get(channel).push(listener);
+    } else {
+      this[channels].set(channel, [listener]);
+      this[redisSub].subscribe(channel);
     }
 
     return listener;
   }
 
   /**
-   * @method once
-   * @param {string} channel
-   * @return {Promise.<object>}
+   * @function once
+   * @param {string} channel - Channel for subscribe.
+   * @returns {Promise.<object>} - Promise who resolved with message.
    */
-  once(channel){
-    return new Promise((resolve, reject) =>
-      this.listen(channel, (err, message) =>
-        !err ? resolve(message) : reject(err)),
-        {once : true}
-      );
+  once(channel) {
+    return new Promise((resolve, reject) => {
+      const callback = (err, message) => (!err ? resolve(message) : reject(err));
+      this.listen(channel, callback, { once: true });
+    });
   }
 
   /**
-   * @method stop
-   * @param {(Listener|object)} listener
-   * @param {string} listener.channel
-   * @param {number} listener.id
-   * @return {undefined}
+   * @function stop
+   * @param {(Listener|object)} listener - Listener object.
+   * @param {string} listener.channel - Channel name.
+   * @param {number} listener.id - Listener ID.
    */
-  stop(listener){
-    const channel = this._channels.get(listener.channel);
-    if(!channel){
+  stop(listener) {
+    const channelsArr = this[channels].get(listener.channel);
+    if (!channelsArr) {
       return;
     }
 
-    if(channel.length === 1){
-      this._channels.delete(listener.channel);
-      this._redisSub.unsubscribe(listener.channel);
+    if (channelsArr.length === 1) {
+      this[channels].delete(listener.channel);
+      this[redisSub].unsubscribe(listener.channel);
     }
 
-    for(let i = 0; i < channel.length; i++){
-      if(channel[i].id === listener.id){
-        channel.splice(i, 1);
+    for (let i = 0; i < channelsArr.length; i += 1) {
+      if (channelsArr[i].id === listener.id) {
+        channelsArr.splice(i, 1);
         break;
       }
     }
   }
 
   /**
-   * @method emit
-   * @param {string} channel
-   * @param {object} message
+   * @function emit
+   * @param {string} channel - Channel name for emmiting message.
+   * @param {Object} message - Message payload.
    */
-  emit(channel, message){
-    this._redisPub.publish(channel, JSON.stringify(message));
+  emit(channel, message) {
+    this[redisPub].publish(channel, JSON.stringify(message));
   }
 }
 
