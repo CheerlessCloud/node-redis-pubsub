@@ -1,5 +1,5 @@
 {
-  "name": "redis-pubsub",
+  "name": "redis-ps",
   "version": "0.0.5",
   "description": "Wrapper for easy communication between processes via Redis Pub\\Sub.",
   "main": "src/index.js",
@@ -19,7 +19,8 @@
   },
   "keywords": [
     "redis",
-    "pubsub"
+    "pubsub",
+    "redis-pubsub"
   ],
   "author": "EnRoute <nnsceg@gmail.com>",
   "license": "MIT",
