@@ -9,6 +9,7 @@
     "test:debug": "node --inspect --inspect-brk --require babel-register node_modules/ava/profile.js ",
     "cover": "nyc ava",
     "postcover": "nyc report --reporter=lcov",
+    "report-coverage": "catw coverage/lcov.info | coveralls",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "precommit": "lint-staged"
@@ -30,6 +31,8 @@
   "homepage": "https://github.com/TeslaCtroitel/node-redis-pubsub#readme",
   "devDependencies": {
     "ava": "^0.22.0",
+    "catw": "^1.0.1",
+    "coveralls": "^2.13.1",
     "eslint": "^4.5.0",
     "eslint-config-airbnb-base": "^11.3.1",
     "eslint-plugin-import": "^2.7.0",
