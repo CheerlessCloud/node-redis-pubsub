@@ -93,5 +93,11 @@
       "eslint --fix ",
       "git add"
     ]
-  }
+  },
+  "files": [
+    "!src/**/*.test.js",
+    "src/**",
+    "README.md",
+    "LICENSE"
+  ]
 }
