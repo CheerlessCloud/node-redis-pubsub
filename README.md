@@ -77,9 +77,9 @@ redisPS.emit('channel name', { payload });
 
 
 ### Roadmap
-Since this is an old package with the full functionality required, only the code refactoring was left.
-
  - [x] Enable and use ESlint with Airbnb config
+ - [x] Add tests with Ava
+ - [ ] Add possibility to set error timeout in 'once' listener
+ - [ ] Add option to allow only one callback in channel
  - [ ] Optimize listening with pSubscribe
- - [ ] Add tests with Ava
  - [ ] Add Babel and use private fields in classes
