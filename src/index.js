@@ -29,10 +29,13 @@ class PubSub {
    * @param {number=} [options.port=6379] - Port of Redis server.
    * @param {string=} options.password - Password  of Redis server.
    * @param {number=} [options.db=0] - Database index.
-   * @param {function(err)} [options.logger] 
+   * @param {function(err)} [options.logger]
    * - Logger callback (this invoke with errors from ioredis client).
    */
   constructor(options) {
+    /**
+     * @type {Map<string, function().<>}
+     */
     this[channels] = new Map();
 
     if (options.connectionFabric) {
@@ -74,8 +77,28 @@ class PubSub {
    * @description Count of channels
    * @type {number}
    */
+  get channelsCount() {
+    return this[channels].size;
+  }
+
+  /**
+   * @description Count of callbacks
+   * @type {number}
+   */
+  get callbacksCount() {
+    return [...this[channels].entries()]
+      .reduce((count, current) => count + current[1].length, 0);
+  }
+
+  /**
+   * @description Count of channels and callbacks
+   * @type {{ channels: number, callbacks: number }}
+   */
   get count() {
-    return this[channels].count;
+    return {
+      channels: this.channelsCount,
+      callbacks: this.callbacksCount,
+    };
   }
 
   /**
