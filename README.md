@@ -1,10 +1,15 @@
-[![Greenkeeper badge](https://badges.greenkeeper.io/CheerlessCloud/redis-pubsub.svg)](https://greenkeeper.io/)
-[![dependencies Status](https://david-dm.org/CheerlessCloud/redis-pubsub/status.svg)](https://david-dm.org/CheerlessCloud/redis-pubsub)
-[![devDependencies Status](https://david-dm.org/CheerlessCloud/redis-pubsub/dev-status.svg)](https://david-dm.org/CheerlessCloud/redis-pubsub?type=dev)
 
-[![npm](https://img.shields.io/npm/v/redis-ps.svg)]()
-[![node](https://img.shields.io/node/v/redis-ps.svg)]()
-[![MIT License](https://img.shields.io/npm/l/redis-ps.svg)]()
+[![codestyle](https://img.shields.io/badge/codestyle-airbnb-brightgreen.svg?style=flat-square)](https://github.com/airbnb/javascript)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+[![node](https://img.shields.io/node/v/redis-ps.svg?style=flat-square)]()
+[![MIT License](https://img.shields.io/npm/l/redis-ps.svg?style=flat-square)]()
+[![npm](https://img.shields.io/npm/v/redis-ps.svg?style=flat-square)]()
+[![npm](https://img.shields.io/npm/dt/redis-ps.svg?style=flat-square)]()
+
+[![Travis](https://img.shields.io/travis/CheerlessCloud/node-redis-pubsub.svg?style=flat-square)](https://travis-ci.org/TeslaCtroitel/node-redis-pubsub)
+[![Coverage Status](https://img.shields.io/coveralls/CheerlessCloud/node-redis-pubsub.svg?style=flat-square)](https://coveralls.io/github/TeslaCtroitel/node-redis-pubsub)
+[![dependencies Status](https://david-dm.org/CheerlessCloud/node-redis-pubsub/status.svg?style=flat-square)](https://david-dm.org/CheerlessCloud/node-redis-pubsub)
+[![devDependencies Status](https://david-dm.org/CheerlessCloud/node-redis-pubsub/dev-status.svg?style=flat-square)](https://david-dm.org/CheerlessCloud/node-redis-pubsub?type=dev)
 
 [![Sponsor](https://app.codesponsor.io/embed/jkPpzosXxwDBBaBNpoqWKCXd/CheerlessCloud/node-redis-pubsub.svg)](https://app.codesponsor.io/link/jkPpzosXxwDBBaBNpoqWKCXd/CheerlessCloud/node-redis-pubsub)
 
@@ -13,7 +18,6 @@
 # RedisPS
 Wrapper for easy communication between processes via Redis Pub/Sub.
 
-***WIP*, don't use this in production for your own safety!**
 
 ### Install
 ```shell
