@@ -1,6 +1,6 @@
 {
   "name": "redis-ps",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "Wrapper for easy communication between processes via Redis Pub\\Sub.",
   "main": "src/index.js",
   "scripts": {
