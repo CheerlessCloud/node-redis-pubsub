@@ -49,7 +49,7 @@ class Listener {
 
   /**
    * @readonly
-   * @type {number}
+   * @type {string}
    */
   get channel() {
     return this[channelS];
@@ -61,7 +61,7 @@ class Listener {
    */
   execute(message) {
     try {
-      this[callbackS](null, JSON.parse(message.toString(), this));
+      this[callbackS](null, JSON.parse(message.toString()), this);
     } catch (err) {
       this[callbackS](err, null, this);
     } finally {
