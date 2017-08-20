@@ -64,13 +64,9 @@ class PubSub {
     this[redisSub].on('message', (channel, message) => {
       const listeners = this[channels].get(channel);
 
-      if (!listeners || listeners.length === 0) {
-        return;
-      }
-
-      for (const listener of listeners) {
+      listeners.forEach((listener) => {
         listener.execute(message);
-      }
+      });
     });
   }
 
@@ -125,22 +121,18 @@ class PubSub {
    * @param {number} listener.id - Listener ID.
    */
   stop(listener) {
-    const channelsArr = this[channels].get(listener.channel);
-    if (!channelsArr) {
-      return;
-    }
+    const listeners = this[channels].get(listener.channel);
 
-    if (channelsArr.length === 1) {
+    if (listeners.length === 1) {
       this[channels].delete(listener.channel);
       this[redisSub].unsubscribe(listener.channel);
     }
 
-    for (let i = 0; i < channelsArr.length; i += 1) {
-      if (channelsArr[i].id === listener.id) {
-        channelsArr.splice(i, 1);
-        break;
+    listeners.forEach((item, i) => {
+      if (item.id === listener.id) {
+        listeners.splice(i, 1);
       }
-    }
+    });
   }
 
   /**
