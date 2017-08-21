@@ -29,7 +29,7 @@ class PubSub {
    * @param {number=} [options.port=6379] - Port of Redis server.
    * @param {string=} options.password - Password  of Redis server.
    * @param {number=} [options.db=0] - Database index.
-   * @param {function(err)} [options.logger]
+   * @param {function(err)} [options.logger=console.error]
    * - Logger callback (this invoke with errors from ioredis client).
    */
   constructor(options) {
@@ -55,7 +55,8 @@ class PubSub {
           connection = new Redis(options);
         }
 
-        connection.on('error', options.logger);
+        // eslint-disable-next-line no-console
+        connection.on('error', options.logger || (err => console.error(err)));
 
         return connection;
       };
