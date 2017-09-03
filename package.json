@@ -34,7 +34,7 @@
     "catw": "^1.0.1",
     "coveralls": "^2.13.1",
     "eslint": "^4.5.0",
-    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsdoc": "^3.1.2",
     "husky": "^0.14.3",
