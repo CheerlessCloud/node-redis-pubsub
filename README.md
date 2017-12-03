@@ -11,8 +11,6 @@
 [![dependencies Status](https://david-dm.org/CheerlessCloud/node-redis-pubsub/status.svg?style=flat-square)](https://david-dm.org/CheerlessCloud/node-redis-pubsub)
 [![devDependencies Status](https://david-dm.org/CheerlessCloud/node-redis-pubsub/dev-status.svg?style=flat-square)](https://david-dm.org/CheerlessCloud/node-redis-pubsub?type=dev)
 
-[![Sponsor](https://app.codesponsor.io/embed/jkPpzosXxwDBBaBNpoqWKCXd/CheerlessCloud/node-redis-pubsub.svg)](https://app.codesponsor.io/link/jkPpzosXxwDBBaBNpoqWKCXd/CheerlessCloud/node-redis-pubsub)
-
 [![NPM](https://nodei.co/npm/redis-ps.png)](https://nodei.co/npm/redis-ps/)
 
 # RedisPS
