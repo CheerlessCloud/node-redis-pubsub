@@ -30,7 +30,7 @@
   },
   "homepage": "https://github.com/TeslaCtroitel/node-redis-pubsub#readme",
   "devDependencies": {
-    "ava": "^0.23.0",
+    "ava": "^1.0.1",
     "catw": "^1.0.1",
     "coveralls": "^3.0.0",
     "eslint": "^4.5.0",
