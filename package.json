@@ -39,7 +39,7 @@
     "eslint-plugin-jsdoc": "^3.1.2",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
-    "nyc": "^11.1.0"
+    "nyc": "^14.1.1"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
